@@ -1,0 +1,13 @@
+http://localhost:5000
+
+###
+POST http://localhost:5000/signup
+
+###
+POST http://localhost:5000/login
+
+###
+POST http://localhost:5000/refresh-token
+
+###
+DELETE http://localhost:5000/logout
