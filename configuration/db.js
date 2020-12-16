@@ -1,30 +1,20 @@
-const mongoose = require('mongoose');
+const mongodb = require('mongodb');
 
-mongoose.connect(process.env.MONGODB_URI, {
-    dbName: process.env.DB_NAME,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-})
-.then(() => {
-    console.log('Mongodb connected...');
-})
-.catch(err => console.log(err.message));
+const dbCon = (coll, cb) => {
+    mongodb.connect('mongodb://localhost:27017/KoskuDb', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then( async (client) => {
+        console.log('Mongodb connected...');
 
-mongoose.connection.on('connected', () => {
-    console.log('Mongoose connected to db');
-})
+        const db = await client.db("KoskuDb").collection(coll);
 
-mongoose.connection.on('error', (err) => {
-    console.log(err.message);
-})
+        await cb(db)
+        client.close();
 
-mongoose.connection.on('disconnected', () => {
-    console.log('Mongoose disconnected');
-})
+    })
+    .catch(err => console.log(err.message));
+} 
 
-process.on('SIGINT', async () => {
-    await mongoose.connection.close()
-    process.exit(0);
-})
+module.exports = dbCon;
