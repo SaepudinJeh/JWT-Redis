@@ -15,6 +15,15 @@ const dbCon = (coll, cb) => {
 
     })
     .catch(err => console.log(err.message));
-} 
+}
+
+dbCon('Users', async(db) => {
+    const result = await db.findOne({
+        "Username": "saepudin@gmail.com",
+        "password":"12345"
+    })
+
+    console.log(result);
+})
 
 module.exports = dbCon;
