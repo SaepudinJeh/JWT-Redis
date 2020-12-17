@@ -1,7 +1,7 @@
-const { hashSync } = require('bcryptjs');
+const { hashSync, compareSync } = require('bcryptjs');
 
 const { dbCon } = require('../configuration');
-const { userSchema } = require('../validators');
+const { userSchema, loginSchema } = require('../validators');
 
 class User {
     constructor(userData) {
@@ -48,6 +48,43 @@ class User {
 
     static validate(userData) {
         return userSchema.validate(userData);
+    };
+
+    static login(userData) {
+        return new Promise((resolve, reject) => {
+
+            const validation = loginSchema.validate(userData);
+
+            if (validation.error) {
+                const error = new Error(validation.error.message);
+                error.statusCode = 400;
+                return resolve(error);
+            };
+
+            dbCon('users', async(db) => {
+                try {
+                    const user = await db.findOne( {'$or': [
+                        {email: userData['email']}
+                    ]}, {projection: { email: 1, password: 1}} );
+
+                    if (!user) {
+                        const error = new Error('User not registered');
+                        error.statusCode = 404;
+                        return resolve(error);
+                    }
+
+                    if (!compareSync(userData['password'], user.password)) {
+                        const error = new Error('Email/password not valid');
+                        error.statusCode = 404;
+                        return resolve(error);
+                    }
+
+                    resolve(user);
+                } catch (err) {
+                    reject(err)
+                }
+            })
+        })
     }
 };
 

@@ -2,7 +2,7 @@ const express = require('express');
 const createError = require('http-errors');
 
 const app = express();
-const middleware = require('./middlewares');
+const { middleware, verifyAccessToken } = require('./middlewares');
 const route = require('./routes');
 
 
@@ -10,6 +10,11 @@ const route = require('./routes');
 middleware(app);
 
 // Routes
+app.get('/', verifyAccessToken, (req, res, next) => {
+    console.log(req.headers['authorization']);
+
+    res.send('Home page')
+})
 route(app);
 
 // Handlers errors global
