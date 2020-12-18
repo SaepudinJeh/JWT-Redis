@@ -1,6 +1,6 @@
 const morgan = require('morgan');
 const express = require('express');
-const {verifyAccessToken} = require('./auth');
+const {verifyAccessToken, verifyRefreshToken} = require('./auth');
 
 module.exports = {
     middleware: (app) => {
@@ -8,6 +8,7 @@ module.exports = {
         app.use(express.json());
         app.use(express.urlencoded({extended:true}))
     },
-    verifyAccessToken
+    verifyAccessToken,
+    verifyRefreshToken
 };
 

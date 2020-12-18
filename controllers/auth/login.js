@@ -2,7 +2,6 @@ const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 
 const { User } = require('../../models');
-const { signAcccessToken} = require('../../middlewares')
 
 const postLogin = (req, res, next) => {
     User.login(req.body)

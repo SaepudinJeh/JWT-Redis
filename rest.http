@@ -22,6 +22,11 @@ Content-Type: application/json
 
 ###
 POST http://localhost:5000/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": 
+}
 
 ###
 DELETE http://localhost:5000/logout

@@ -30,7 +30,6 @@ class User {
             dbCon('users', async (db) => {
                 try {
                     const user = await db.findOne({ email: this.userData['email']});
-                    console.log(user);
                     if (!user) {
                         resolve({ check: false });
                     } else if (this.userData['email'] === user.email) {

@@ -19,5 +19,18 @@ module.exports = {
         } catch (err) {
             next(createError(401));
         }
+    },
+    verifyRefreshToken: (refreshToken) => {
+        return new Promise((resolve, reject) => {
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, payload) => {
+                if (err) return reject(createError.Unauthorized());
+                const user = {
+                    _id: payload._id,
+                    email: payload.email
+                }
+
+                resolve(user)
+            })
+        })
     }
 }
